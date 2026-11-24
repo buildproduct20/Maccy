@@ -13,6 +13,49 @@ and lets you quickly navigate, search, and use previous clipboard contents.
 
 Maccy works on macOS Sonoma 14 or higher.
 
+## Maccy Lite (this fork)
+
+Maccy Lite is the Rust-first, personal-use Apple Silicon variant. It has its own
+bundle ID (`com.buildproduct20.maccylite`), sandbox and initially empty history.
+The original project and its tests remain in this repository for reference;
+these instructions do not build or replace the original Maccy app.
+
+From the repository root, with Rust 1.100.0 and macOS Command Line Tools:
+
+```sh
+python3 -I scripts/build_lite.py
+python3 -I scripts/build_lite.py --test
+```
+
+The first command prints a newly built, ad-hoc signed `Maccy Lite.app` path.
+Open that app and click its menu-bar icon. Selecting a row copies it back to the
+clipboard; paste it yourself in the destination app. Basic keyboard navigation
+is local to the popup. The installed app does not require Rust or Docker.
+Quit using the popup's Quit button. To roll back, quit and remove only the
+separate Lite app; leave the original Maccy installation and its data in place.
+
+Reopening Maccy Lite brings the existing history popup forward instead of
+starting a second watcher. In **Settings > Popup Shortcut**, record or remove
+one global open/close shortcut (none by default). For automatic startup, keep
+the app in a permanent folder, then enable **Settings > Startup > Launch at
+Login**. If prompted, allow Maccy Lite under **System Settings > General > Login
+Items & Extensions**. Turn Launch at Login off before removing the app.
+
+History defaults to 200 items and seven days for all retained types, with no
+pins. Settings can adjust both limits. To import, explicitly
+choose a legacy preferences `.plist` in Settings and confirm. It imports only
+compatible settings, never reads legacy history, and does not change the original
+preferences. The selected file stays unchanged. Use a settings-only export;
+there is no direct read of the original app's sandbox.
+
+The app skips capture if an app bundle-ID filter is active and the writer cannot
+be verified. AppKit's foreground application is not proof of the clipboard writer.
+Pause, type filters, sensitive pasteboard markers, and text-pattern filters do
+not depend on source-app attribution. Search is literal substring matching;
+fuzzy, regex-search and alternate sorting preferences are not imported. OCR,
+Paste Stack, synthetic paste and automatic updates are not included.
+See [verification notes](docs/LITE-VERIFICATION.md) for test coverage and remaining gaps.
+
 <!-- vim-markdown-toc GFM -->
 
 * [Features](#features)
